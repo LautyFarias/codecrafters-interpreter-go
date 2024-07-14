@@ -36,7 +36,9 @@ func main() {
 		n, err := reader.Read(bytes)
 
 		if err == io.EOF {
-			fmt.Println(tokenize(EOF))
+			token, _ := tokenize(EOF)
+			fmt.Println(token)
+
 			break
 		}
 
