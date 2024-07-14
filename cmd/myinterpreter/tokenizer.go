@@ -21,19 +21,26 @@ var typeByChar = map[string]string{
 	"{": "LEFT_BRACE",
 	"}": "RIGHT_BRACE",
 
-	"*": "STAR",
-	"/": "SLASH",
-	"+": "PLUS",
-	"-": "MINUS",
-	".": "DOT",
-	",": "COMMA",
-	";": "SEMICOLON",
+	"==": "EQUAL_EQUAL",
+	"=":  "EQUAL",
+	"*":  "STAR",
+	"/":  "SLASH",
+	"+":  "PLUS",
+	"-":  "MINUS",
+	".":  "DOT",
+	",":  "COMMA",
+	";":  "SEMICOLON",
+}
+
+func isToken(char string) (ok bool) {
+	_, ok = typeByChar[char]
+	return
 }
 
 func getType(char string) (string, error) {
-	tokenType := typeByChar[char]
+	tokenType, ok := typeByChar[char]
 
-	if tokenType == "" {
+	if !ok {
 		return "", errors.New("Unexpected character: " + char)
 	}
 

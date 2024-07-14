@@ -28,7 +28,7 @@ func main() {
 	}
 
 	reader := bufio.NewReader(file)
-	bytes := make([]byte, 1)
+	bytes := make([]byte, 2)
 
 	code := NON_ERR_EXIT_CODE
 
@@ -42,7 +42,26 @@ func main() {
 			break
 		}
 
-		token, err := tokenize(string(bytes[:n]))
+		charset := string(bytes[:n])
+
+		if !isToken(charset) {
+			char := charset[:1]
+
+			token, err := tokenize(char)
+
+			if err != nil {
+				reportCharError(err, n)
+				code = LEXICAL_ERR_EXIT_CODE
+
+				continue
+			}
+
+			fmt.Println(token)
+
+			charset = charset[1:]
+		}
+
+		token, err := tokenize(charset)
 
 		if err != nil {
 			reportCharError(err, n)
