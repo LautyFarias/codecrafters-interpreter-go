@@ -20,7 +20,7 @@ func printError(err string, args ...any) {
 }
 
 func printErrorAndExit(err string, args ...any) {
-	printError(err, args)
+	printError(err, args...)
 	quit(ERR_EXIT_CODE)
 }
 
