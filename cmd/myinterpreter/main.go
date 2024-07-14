@@ -30,6 +30,8 @@ func main() {
 	reader := bufio.NewReader(file)
 	bytes := make([]byte, 1)
 
+	code := NON_ERR_EXIT_CODE
+
 	for {
 		n, err := reader.Read(bytes)
 
@@ -42,8 +44,11 @@ func main() {
 
 		if err != nil {
 			reportCharError(err, n)
+			code = LEXICAL_ERR_EXIT_CODE
 		}
 
 		fmt.Println(token)
 	}
+
+	quit(code)
 }
