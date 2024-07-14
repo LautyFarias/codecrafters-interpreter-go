@@ -25,5 +25,5 @@ func printErrorAndExit(err string, args ...any) {
 }
 
 func reportCharError(err error, line int) {
-	printError("[line %v] Error: %v", line, err)
+	printError("[line %v] Error: %v\n", line, err)
 }

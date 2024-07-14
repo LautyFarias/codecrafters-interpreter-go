@@ -47,6 +47,8 @@ func main() {
 		if err != nil {
 			reportCharError(err, n)
 			code = LEXICAL_ERR_EXIT_CODE
+
+			continue
 		}
 
 		fmt.Println(token)
