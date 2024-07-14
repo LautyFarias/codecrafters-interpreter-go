@@ -7,11 +7,6 @@ import (
 	"os"
 )
 
-func printErrorAndExit(error string, args ...any) {
-	_, _ = fmt.Fprintf(os.Stderr, error, args)
-	os.Exit(1)
-}
-
 func main() {
 	if len(os.Args) < 3 {
 		printErrorAndExit("Usage: ./your_program.sh tokenize <filename>")
@@ -43,7 +38,12 @@ func main() {
 			break
 		}
 
-		token := tokenize(string(bytes[:n]))
+		token, err := tokenize(string(bytes[:n]))
+
+		if err != nil {
+			reportCharError(err, n)
+		}
+
 		fmt.Println(token)
 	}
 }

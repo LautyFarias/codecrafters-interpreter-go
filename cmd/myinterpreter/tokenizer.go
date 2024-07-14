@@ -1,5 +1,7 @@
 package main
 
+import "errors"
+
 const EOF = "EOF"
 
 type Token struct {
@@ -28,6 +30,16 @@ var typeByChar = map[string]string{
 	";": "SEMICOLON",
 }
 
+func getType(char string) (string, error) {
+	tokenType := typeByChar[char]
+
+	if tokenType == "" {
+		return "", errors.New("Unexpected character: " + char)
+	}
+
+	return tokenType, nil
+}
+
 func getLexeme(char string) string {
 	switch char {
 	case EOF:
@@ -44,6 +56,12 @@ func getLiteral(char string) string {
 	}
 }
 
-func tokenize(char string) Token {
-	return Token{tokenType: typeByChar[char], lexeme: getLexeme(char), literal: getLiteral(char)}
+func tokenize(char string) (Token, error) {
+	tokenType, err := getType(char)
+
+	if err != nil {
+		return Token{}, err
+	}
+
+	return Token{tokenType: tokenType, lexeme: getLexeme(char), literal: getLiteral(char)}, nil
 }
