@@ -16,6 +16,8 @@ var typeByChar = map[string]string{
 	EOF: EOF,
 	"(": "LEFT_PAREN",
 	")": "RIGHT_PAREN",
+	"{": "LEFT_BRACKET",
+	"}": "RIGHT_BRACKET",
 }
 
 func getLexeme(char string) string {
