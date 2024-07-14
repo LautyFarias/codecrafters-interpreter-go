@@ -5,24 +5,27 @@ import (
 	"os"
 )
 
+func printErrorAndExit(error string, args ...any) {
+	_, _ = fmt.Fprintf(os.Stderr, error, args)
+	os.Exit(1)
+}
+
 func main() {
 	if len(os.Args) < 3 {
-		fmt.Fprintln(os.Stderr, "Usage: ./your_program.sh tokenize <filename>")
-		os.Exit(1)
+		printErrorAndExit("Usage: ./your_program.sh tokenize <filename>")
 	}
 
 	command := os.Args[1]
 
 	if command != "tokenize" {
-		fmt.Fprintf(os.Stderr, "Unknown command: %s\n", command)
-		os.Exit(1)
+		printErrorAndExit("Unknown command: %s\n", command)
 	}
 
 	filename := os.Args[2]
 	fileContents, err := os.ReadFile(filename)
+
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error reading file: %v\n", err)
-		os.Exit(1)
+		printErrorAndExit("Error reading file: %v\n", err)
 	}
 
 	if len(fileContents) > 0 {
