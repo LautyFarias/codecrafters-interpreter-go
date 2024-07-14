@@ -22,7 +22,7 @@ var typeByChar = map[string]string{
 	"*": "STAR",
 	"/": "SLASH",
 	"+": "PLUS",
-	"-": "SUBTRACT",
+	"-": "MINUS",
 	".": "DOT",
 	",": "COMMA",
 	";": "SEMI",
