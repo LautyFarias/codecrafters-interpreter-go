@@ -45,12 +45,12 @@ func main() {
 		charset := string(bytes[:n])
 
 		if !isToken(charset) {
-			char := charset[:1]
+			char := charset[:n-1]
 
 			token, err := tokenize(char)
 
 			if err != nil {
-				reportCharError(err, n)
+				reportCharError(err, n-1)
 				code = LEXICAL_ERR_EXIT_CODE
 
 				continue
@@ -58,7 +58,7 @@ func main() {
 
 			fmt.Println(token)
 
-			charset = charset[1:]
+			charset = charset[1:n]
 		}
 
 		token, err := tokenize(charset)
