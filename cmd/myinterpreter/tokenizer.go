@@ -18,6 +18,14 @@ var typeByChar = map[string]string{
 	")": "RIGHT_PAREN",
 	"{": "LEFT_BRACE",
 	"}": "RIGHT_BRACE",
+
+	"*": "STAR",
+	"/": "SLASH",
+	"+": "PLUS",
+	"-": "SUBTRACT",
+	".": "DOT",
+	",": "COMMA",
+	";": "SEMI",
 }
 
 func getLexeme(char string) string {
