@@ -3,9 +3,19 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"io"
 	"os"
 )
+
+func scanFile(path string) (scanner *bufio.Scanner, file *os.File) {
+	file, err := os.Open(path)
+
+	if err != nil {
+		printErrorAndExit("Error opening file: %v\n", err)
+	}
+
+	scanner = bufio.NewScanner(file)
+	return
+}
 
 func main() {
 	if len(os.Args) < 3 {
@@ -19,61 +29,58 @@ func main() {
 	}
 
 	filename := os.Args[2]
-	file, err := os.Open(filename)
 
+	scanner, file := scanFile(filename)
 	defer file.Close()
 
-	if err != nil {
-		printErrorAndExit("Error opening file: %v\n", err)
-	}
-
-	reader := bufio.NewReader(file)
-	bytes := make([]byte, 2)
-
+	lineNumber := 0
 	code := NON_ERR_EXIT_CODE
 
-	for {
-		n, err := reader.Read(bytes)
+	for scanner.Scan() {
+		lineNumber += 1
+		line := scanner.Text()
 
-		if err == io.EOF {
-			token, _ := tokenize(EOF)
-			fmt.Println(token)
+		skipNext := false
 
-			break
-		}
+		for index, runeValue := range line {
+			char := string(runeValue)
 
-		charset := string(bytes[:n])
+			if skipNext {
+				skipNext = false
+				continue
+			}
 
-		if !isToken(charset) {
-			char := charset[:1]
+			next := func() string {
+				if len(line[index:]) > 2 {
+					return string(line[index+1])
+				}
 
-			token, err := tokenize(char)
+				return " "
+			}()
+
+			charset := char + next
+
+			var token Token
+			var err error
+
+			if isToken(charset) {
+				token, err = tokenize(charset)
+				skipNext = true
+			} else {
+				token, err = tokenize(char)
+			}
 
 			if err != nil {
-				reportCharError(err, n-1)
+				reportCharError(err, lineNumber)
 				code = LEXICAL_ERR_EXIT_CODE
 			} else {
 				fmt.Println(token)
 			}
-
-			charset = charset[1:n]
-
-			if charset == "" {
-				continue
-			}
 		}
-
-		token, err := tokenize(charset)
-
-		if err != nil {
-			reportCharError(err, n)
-			code = LEXICAL_ERR_EXIT_CODE
-
-			continue
-		}
-
-		fmt.Println(token)
 	}
+
+	token, _ := tokenize(EOF)
+	fmt.Println(token)
 
 	quit(code)
 }
