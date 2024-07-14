@@ -36,13 +36,14 @@ func main() {
 	bytes := make([]byte, 1)
 
 	for {
-		_, err := reader.Read(bytes)
+		n, err := reader.Read(bytes)
 
 		if err == io.EOF {
-			fmt.Println("EOF  null")
+			fmt.Println(tokenize(EOF))
 			break
 		}
 
-		panic("Scanner not implemented")
+		token := tokenize(string(bytes[:n]))
+		fmt.Println(token)
 	}
 }
