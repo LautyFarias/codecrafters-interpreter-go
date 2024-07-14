@@ -25,7 +25,7 @@ var typeByChar = map[string]string{
 	"-": "MINUS",
 	".": "DOT",
 	",": "COMMA",
-	";": "SEMI",
+	";": "SEMICOLON",
 }
 
 func getLexeme(char string) string {
