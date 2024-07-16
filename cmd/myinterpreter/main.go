@@ -1,36 +1,26 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
+	"github.com/codecrafters-io/interpreter-starter-go/cmd/myinterpreter/reporter"
+	"github.com/codecrafters-io/interpreter-starter-go/cmd/myinterpreter/scanning"
 	"os"
 )
 
-func scanFile(path string) (scanner *bufio.Scanner, file *os.File) {
-	file, err := os.Open(path)
-
-	if err != nil {
-		printErrorAndExit("Error opening file: %v\n", err)
-	}
-
-	scanner = bufio.NewScanner(file)
-	return
-}
-
 func main() {
 	if len(os.Args) < 3 {
-		printErrorAndExit("Usage: ./your_program.sh tokenize <filename>")
+		reporter.PrintErrorAndExit("Usage: ./your_program.sh tokenize <filename>")
 	}
 
 	command := os.Args[1]
 
 	if command != "tokenize" {
-		printErrorAndExit("Unknown command: %s\n", command)
+		reporter.PrintErrorAndExit("Unknown command: %s\n", command)
 	}
 
 	filename := os.Args[2]
 
-	scanner, file := scanFile(filename)
+	scanner, file := scanning.ScanFile(filename)
 	defer file.Close()
 
 	lineNumber := 0
@@ -60,18 +50,18 @@ func main() {
 
 			charset := char + next
 
-			var token Token
+			var token scanning.Token
 			var err error
 
-			if isToken(charset) {
-				token, err = tokenize(charset)
+			if scanning.IsToken(charset) {
+				token, err = scanning.Tokenize(charset)
 				skipNext = true
 			} else {
-				token, err = tokenize(char)
+				token, err = scanning.Tokenize(char)
 			}
 
 			if err != nil {
-				reportCharError(err, lineNumber)
+				reporter.PrintCharError(err, lineNumber)
 				code = LEXICAL_ERR_EXIT_CODE
 			} else {
 				fmt.Println(token)
@@ -79,8 +69,8 @@ func main() {
 		}
 	}
 
-	token, _ := tokenize(EOF)
+	token, _ := scanning.Tokenize(scanning.EOF)
 	fmt.Println(token)
 
-	quit(code)
+	os.Exit(code)
 }

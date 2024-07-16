@@ -1,4 +1,4 @@
-package main
+package scanning
 
 import "errors"
 
@@ -32,7 +32,7 @@ var typeByChar = map[string]string{
 	";":  "SEMICOLON",
 }
 
-func isToken(char string) (ok bool) {
+func IsToken(char string) (ok bool) {
 	_, ok = typeByChar[char]
 	return
 }
@@ -63,7 +63,7 @@ func getLiteral(char string) string {
 	}
 }
 
-func tokenize(char string) (Token, error) {
+func Tokenize(char string) (Token, error) {
 	tokenType, err := getType(char)
 
 	if err != nil {
