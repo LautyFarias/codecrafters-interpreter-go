@@ -3,7 +3,8 @@ package scanning
 import "errors"
 
 const EOF = "EOF"
-const COMMENT_TOKEN = "//"
+const CommentToken = "//"
+const BlankToken = " "
 
 type Token struct {
 	tokenType string

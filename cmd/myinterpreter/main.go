@@ -49,9 +49,14 @@ func main() {
 			}()
 
 			char := string(runeValue)
+
+			if char == scanning.BlankToken {
+				continue
+			}
+
 			charset := char + next
 
-			if charset == scanning.COMMENT_TOKEN {
+			if charset == scanning.CommentToken {
 				break
 			}
 
