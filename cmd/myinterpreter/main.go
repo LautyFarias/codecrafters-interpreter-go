@@ -41,11 +41,13 @@ func main() {
 			}
 
 			next := func() string {
-				if len(line[index:]) > 2 {
-					return string(line[index+1])
+				nextIndex := index + 1
+
+				if nextIndex >= len(line) {
+					return " "
 				}
 
-				return " "
+				return string(line[index+1])
 			}()
 
 			charset := char + next
