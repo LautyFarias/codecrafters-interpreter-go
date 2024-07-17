@@ -21,6 +21,8 @@ var typeByChar = map[string]string{
 	"{": "LEFT_BRACE",
 	"}": "RIGHT_BRACE",
 
+	"!":  "BANG",
+	"!=": "BANG_EQUAL",
 	"==": "EQUAL_EQUAL",
 	"=":  "EQUAL",
 	"*":  "STAR",
