@@ -50,7 +50,7 @@ func main() {
 
 			char := string(runeValue)
 
-			if char == scanning.BlankToken {
+			if char == scanning.BlankToken || char == scanning.TabToken {
 				continue
 			}
 

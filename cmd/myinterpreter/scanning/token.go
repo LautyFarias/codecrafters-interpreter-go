@@ -5,6 +5,7 @@ import "errors"
 const EOF = "EOF"
 const CommentToken = "//"
 const BlankToken = " "
+const TabToken = "	"
 
 type Token struct {
 	tokenType string
