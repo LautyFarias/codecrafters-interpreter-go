@@ -20,18 +20,26 @@ var typeByChar = map[string]string{
 	")": "RIGHT_PAREN",
 	"{": "LEFT_BRACE",
 	"}": "RIGHT_BRACE",
+	".": "DOT",
+	",": "COMMA",
+	";": "SEMICOLON",
 
+	// OPERATORS
+	// Comparison
+	"<":  "LESS",
+	"<=": "LESS_EQUAL",
+	">":  "GREATER",
+	">=": "GREATER_EQUAL",
 	"!":  "BANG",
 	"!=": "BANG_EQUAL",
 	"==": "EQUAL_EQUAL",
-	"=":  "EQUAL",
-	"*":  "STAR",
-	"/":  "SLASH",
-	"+":  "PLUS",
-	"-":  "MINUS",
-	".":  "DOT",
-	",":  "COMMA",
-	";":  "SEMICOLON",
+
+	// Math
+	"=": "EQUAL",
+	"*": "STAR",
+	"/": "SLASH",
+	"+": "PLUS",
+	"-": "MINUS",
 }
 
 func IsToken(char string) (ok bool) {
