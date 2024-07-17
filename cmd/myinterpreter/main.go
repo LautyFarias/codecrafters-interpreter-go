@@ -52,6 +52,10 @@ func main() {
 
 			charset := char + next
 
+			if charset == scanning.COMMENT_TOKEN {
+				break
+			}
+
 			var token scanning.Token
 			var err error
 
