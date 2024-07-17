@@ -33,6 +33,10 @@ func main() {
 		skipNext := false
 
 		for index, runeValue := range line {
+			if runeValue == scanning.BlankToken || runeValue == scanning.TabToken {
+				continue
+			}
+
 			if skipNext {
 				skipNext = false
 				continue
@@ -49,11 +53,6 @@ func main() {
 			}()
 
 			char := string(runeValue)
-
-			if char == scanning.BlankToken || char == scanning.TabToken {
-				continue
-			}
-
 			charset := char + next
 
 			if charset == scanning.CommentToken {

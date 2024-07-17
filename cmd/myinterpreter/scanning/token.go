@@ -3,9 +3,12 @@ package scanning
 import "errors"
 
 const EOF = "EOF"
-const CommentToken = "//"
-const BlankToken = " "
-const TabToken = "	"
+
+const (
+	CommentToken = "//"
+	BlankToken   = ' '
+	TabToken     = '	'
+)
 
 type Token struct {
 	tokenType string
