@@ -33,8 +33,6 @@ func main() {
 		skipNext := false
 
 		for index, runeValue := range line {
-			char := string(runeValue)
-
 			if skipNext {
 				skipNext = false
 				continue
@@ -50,28 +48,27 @@ func main() {
 				return string(line[index+1])
 			}()
 
+			char := string(runeValue)
 			charset := char + next
 
 			if charset == scanning.COMMENT_TOKEN {
 				break
 			}
 
-			var token scanning.Token
-			var err error
-
 			if scanning.IsToken(charset) {
-				token, err = scanning.Tokenize(charset)
-				skipNext = true
-			} else {
-				token, err = scanning.Tokenize(char)
+				char, skipNext = charset, true
 			}
+
+			token, err := scanning.Tokenize(char)
 
 			if err != nil {
 				reporter.PrintCharError(err, lineNumber)
 				code = LEXICAL_ERR_EXIT_CODE
-			} else {
-				fmt.Println(token)
+
+				continue
 			}
+
+			fmt.Println(token)
 		}
 	}
 
