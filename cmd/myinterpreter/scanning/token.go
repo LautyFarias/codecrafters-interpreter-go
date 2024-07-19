@@ -5,9 +5,8 @@ import "errors"
 const EOF = "EOF"
 
 const (
-	CommentToken = "//"
-	BlankToken   = ' '
-	TabToken     = '	'
+	TabToken   = '	'
+	BlankToken = ' '
 )
 
 type Token struct {
@@ -46,11 +45,6 @@ var typeByChar = map[string]string{
 	"/": "SLASH",
 	"+": "PLUS",
 	"-": "MINUS",
-}
-
-func IsToken(char string) (ok bool) {
-	_, ok = typeByChar[char]
-	return
 }
 
 func getType(char string) (string, error) {

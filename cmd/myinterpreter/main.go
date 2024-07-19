@@ -33,40 +33,44 @@ func main() {
 		lineNumber += 1
 		line := scanner.Text()
 
-		skipNext := false
+		var lexeme string
+		skipChar := false
 
-		for index, runeValue := range line {
-			if runeValue == scanning.BlankToken || runeValue == scanning.TabToken {
+	lineIteration:
+		for index, char := range line {
+			if skipChar {
+				skipChar = false
 				continue
 			}
 
-			if skipNext {
-				skipNext = false
-				continue
-			}
+			switch char {
+			case '<', '>', '=', '!':
+				next, _ := scanning.GetNextRune(line, index)
 
-			next := func() string {
-				nextIndex := index + 1
+				lexeme = string(char)
 
-				if nextIndex >= len(line) {
-					return " "
+				if next == '=' {
+					lexeme += string(next)
+					skipChar = true
 				}
 
-				return string(line[index+1])
-			}()
+			case '/':
+				next, err := scanning.GetNextRune(line, index)
 
-			char := string(runeValue)
-			charset := char + next
+				if err != nil {
+					lexeme = string(char)
+				}
 
-			if charset == scanning.CommentToken {
-				break
+				if next == '/' {
+					break lineIteration
+				}
+			case scanning.BlankToken, scanning.TabToken:
+				continue
+			default:
+				lexeme = string(char)
 			}
 
-			if scanning.IsToken(charset) {
-				char, skipNext = charset, true
-			}
-
-			token, err := scanning.Tokenize(char)
+			token, err := scanning.Tokenize(lexeme)
 
 			if err != nil {
 				reporter.PrintCharError(err, lineNumber)
