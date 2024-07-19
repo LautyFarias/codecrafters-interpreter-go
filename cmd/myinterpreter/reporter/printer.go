@@ -5,15 +5,15 @@ import (
 	"os"
 )
 
-func PrintError(err string, args ...any) {
+func printError(err string, args ...any) {
 	_, _ = fmt.Fprintf(os.Stderr, err, args...)
 }
 
 func PrintErrorAndExit(err string, args ...any) {
-	PrintError(err, args...)
+	printError(err, args...)
 	os.Exit(1)
 }
 
-func PrintCharError(err error, line int) {
-	PrintError("[line %v] Error: %v\n", line, err)
+func PrintErrorAtLine(err error, line int) {
+	printError("[line %v] Error: %v\n", line, err)
 }

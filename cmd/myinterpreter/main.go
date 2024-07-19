@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"github.com/codecrafters-io/interpreter-starter-go/cmd/myinterpreter/reporter"
 	"github.com/codecrafters-io/interpreter-starter-go/cmd/myinterpreter/scanning"
@@ -99,7 +100,7 @@ func main() {
 			token, err := scanning.Tokenize(lexeme)
 
 			if err != nil {
-				reporter.PrintCharError(err, lineNumber)
+				reporter.PrintErrorAtLine(err, lineNumber)
 				code = LEXICAL_ERR_EXIT_CODE
 
 				continue
@@ -109,7 +110,8 @@ func main() {
 		}
 
 		if buildingString {
-			fmt.Printf("[line %v] Error: Unterminated string.\n", lineNumber)
+			reporter.PrintErrorAtLine(errors.New("Unterminated string."), lineNumber)
+			code = LEXICAL_ERR_EXIT_CODE
 		}
 	}
 
