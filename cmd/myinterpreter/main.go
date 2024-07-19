@@ -7,24 +7,27 @@ import (
 	"os"
 )
 
-func main() {
-	if len(os.Args) < 3 {
+func checkArguments(args []string) {
+	if len(args) < 3 {
 		reporter.PrintErrorAndExit("Usage: ./your_program.sh tokenize <filename>")
 	}
 
-	command := os.Args[1]
+	command := args[1]
 
 	if command != "tokenize" {
 		reporter.PrintErrorAndExit("Unknown command: %s\n", command)
 	}
+}
+
+func main() {
+	checkArguments(os.Args)
 
 	filename := os.Args[2]
-
 	scanner, file := scanning.ScanFile(filename)
 	defer file.Close()
 
-	lineNumber := 0
 	code := NON_ERR_EXIT_CODE
+	lineNumber := 0
 
 	for scanner.Scan() {
 		lineNumber += 1
