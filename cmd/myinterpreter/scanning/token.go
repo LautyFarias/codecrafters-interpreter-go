@@ -1,6 +1,9 @@
 package scanning
 
-import "errors"
+import (
+	"errors"
+	"strings"
+)
 
 const EOF = "EOF"
 
@@ -51,6 +54,10 @@ func getType(char string) (string, error) {
 	tokenType, ok := typeByChar[char]
 
 	if !ok {
+		if len(char) > 1 && char[0] == '"' && char[len(char)-1] == '"' {
+			return "STRING", nil
+		}
+
 		return "", errors.New("Unexpected character: " + char)
 	}
 
@@ -67,10 +74,11 @@ func getLexeme(char string) string {
 }
 
 func getLiteral(char string) string {
-	switch char {
-	default:
-		return "null"
+	if char[0] == '"' && char[len(char)-1] == '"' {
+		return strings.ReplaceAll(char, "\"", "")
 	}
+
+	return "null"
 }
 
 func Tokenize(char string) (Token, error) {

@@ -5,6 +5,7 @@ import (
 	"github.com/codecrafters-io/interpreter-starter-go/cmd/myinterpreter/reporter"
 	"github.com/codecrafters-io/interpreter-starter-go/cmd/myinterpreter/scanning"
 	"os"
+	"strings"
 )
 
 func checkArguments(args []string) {
@@ -29,6 +30,9 @@ func main() {
 	code := NON_ERR_EXIT_CODE
 	lineNumber := 0
 
+	stringBuilder := strings.Builder{}
+	buildingString := false
+
 	for scanner.Scan() {
 		lineNumber += 1
 		line := scanner.Text()
@@ -44,6 +48,19 @@ func main() {
 			}
 
 			switch char {
+			case '"':
+				stringBuilder.WriteRune(char)
+
+				if stringBuilder.Len() == 1 {
+					buildingString = true
+					continue
+				}
+
+				if buildingString {
+					buildingString = false
+					lexeme = stringBuilder.String()
+					stringBuilder.Reset()
+				}
 			case '<', '>', '=', '!':
 				next, _ := scanning.GetNextRune(line, index)
 
@@ -65,8 +82,17 @@ func main() {
 					break lineIteration
 				}
 			case scanning.BlankToken, scanning.TabToken:
+				if buildingString {
+					stringBuilder.WriteRune(char)
+				}
+
 				continue
 			default:
+				if buildingString {
+					stringBuilder.WriteRune(char)
+					continue
+				}
+
 				lexeme = string(char)
 			}
 
@@ -80,6 +106,10 @@ func main() {
 			}
 
 			fmt.Println(token)
+		}
+
+		if buildingString {
+			fmt.Printf("[line %v] Error: Unterminated string.\n", lineNumber)
 		}
 	}
 
