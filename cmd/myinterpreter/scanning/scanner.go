@@ -64,6 +64,9 @@ func (s *Scanner) Scan() {
 			}
 
 			switch char {
+			case '0', '1', '2', '3', '4', '5', '6', '7', '8', '9':
+				s.stringBuilder.WriteRune(char)
+				continue
 			case '"':
 				s.stringBuilder.WriteRune(char)
 
@@ -111,6 +114,19 @@ func (s *Scanner) Scan() {
 		}
 
 		if s.isBuildingString() {
+			if lexeme = s.stringBuilder.String(); lexeme[0] != '"' {
+				token, err := Tokenize(lexeme)
+
+				if err != nil {
+					s.reportError(err)
+					continue
+				}
+
+				fmt.Println(token)
+				s.stringBuilder.Reset()
+				continue
+			}
+
 			s.reportError(errors.New("Unterminated string."))
 		}
 	}

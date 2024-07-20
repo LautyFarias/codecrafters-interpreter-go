@@ -2,6 +2,7 @@ package scanning
 
 import (
 	"errors"
+	"strconv"
 	"strings"
 )
 
@@ -58,6 +59,10 @@ func getType(char string) (string, error) {
 			return "STRING", nil
 		}
 
+		if _, err := strconv.ParseFloat(char, 64); err == nil {
+			return "NUMBER", nil
+		}
+
 		return "", errors.New("Unexpected character: " + char)
 	}
 
@@ -76,6 +81,10 @@ func getLexeme(char string) string {
 func getLiteral(char string) string {
 	if char[0] == '"' && char[len(char)-1] == '"' {
 		return strings.ReplaceAll(char, "\"", "")
+	}
+
+	if _, err := strconv.ParseFloat(char, 64); err == nil {
+		return char
 	}
 
 	return "null"
