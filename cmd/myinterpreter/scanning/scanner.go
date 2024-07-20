@@ -103,14 +103,7 @@ func (s *Scanner) Scan() {
 				lexeme = string(char)
 			}
 
-			token, err := Tokenize(lexeme)
-
-			if err != nil {
-				s.reportError(err)
-				continue
-			}
-
-			fmt.Println(token)
+			s.reportToken(lexeme)
 		}
 
 		if s.isBuildingString() {
@@ -130,6 +123,17 @@ func (s *Scanner) Scan() {
 			s.reportError(errors.New("Unterminated string."))
 		}
 	}
+}
+
+func (s *Scanner) reportToken(lexeme string) {
+	token, err := Tokenize(lexeme)
+
+	if err != nil {
+		s.reportError(err)
+		return
+	}
+
+	fmt.Println(token)
 }
 
 func (s *Scanner) reportError(err error) {
