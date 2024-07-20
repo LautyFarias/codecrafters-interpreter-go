@@ -58,7 +58,7 @@ func getType(char string) (string, error) {
 			return "STRING", nil
 		}
 
-		if isNumber(char) {
+		if isNumeric(char) {
 			return "NUMBER", nil
 		}
 
@@ -82,7 +82,7 @@ func getLiteral(char string) string {
 		return strings.ReplaceAll(char, "\"", "")
 	}
 
-	if isNumber(char) {
+	if isNumeric(char) {
 		return char
 	}
 

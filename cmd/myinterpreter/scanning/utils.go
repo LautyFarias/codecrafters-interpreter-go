@@ -1,8 +1,22 @@
 package scanning
 
-import "regexp"
+import (
+	"regexp"
+	"strconv"
+)
 
-func isNumber(s string) bool {
-	re := regexp.MustCompile(`^\d+((\.\d+)+)?.?$`)
-	return re.MatchString(s)
+func toNumber(s string) (match string, ok bool) {
+	re := regexp.MustCompile(`^\d+(\.\d+)?`)
+	matches := re.FindStringSubmatch(s)
+
+	if len(matches) == 0 {
+		return "", false
+	}
+
+	return matches[0], true
+}
+
+func isNumeric(s string) bool {
+	_, err := strconv.ParseFloat(s, 64)
+	return err == nil
 }
