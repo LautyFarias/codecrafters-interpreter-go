@@ -2,7 +2,6 @@ package scanning
 
 import (
 	"errors"
-	"strconv"
 	"strings"
 )
 
@@ -59,7 +58,7 @@ func getType(char string) (string, error) {
 			return "STRING", nil
 		}
 
-		if _, err := strconv.ParseFloat(char, 64); err == nil {
+		if isNumber(char) {
 			return "NUMBER", nil
 		}
 
@@ -83,7 +82,7 @@ func getLiteral(char string) string {
 		return strings.ReplaceAll(char, "\"", "")
 	}
 
-	if _, err := strconv.ParseFloat(char, 64); err == nil {
+	if isNumber(char) {
 		return char
 	}
 

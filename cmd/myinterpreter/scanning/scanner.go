@@ -114,7 +114,7 @@ func (s *Scanner) Scan() {
 		}
 
 		if s.isBuildingString() {
-			if lexeme = s.stringBuilder.String(); lexeme[0] != '"' {
+			if lexeme = s.stringBuilder.String(); isNumber(lexeme) {
 				token, err := Tokenize(lexeme)
 
 				if err != nil {
