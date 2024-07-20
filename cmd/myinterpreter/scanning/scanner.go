@@ -38,7 +38,11 @@ func (s *Scanner) next() (rune, error) {
 }
 
 func (s *Scanner) isBuildingString() bool {
-	return s.stringBuilder.Len() > 0
+	return s.stringBuilder.Len() > 0 && s.stringBuilder.String()[0] == '"'
+}
+
+func (s *Scanner) isBuildingNumber() bool {
+	return s.stringBuilder.Len() > 0 && s.stringBuilder.String()[0] != '"'
 }
 
 func (s *Scanner) Scan() {
@@ -67,6 +71,23 @@ func (s *Scanner) Scan() {
 			case '0', '1', '2', '3', '4', '5', '6', '7', '8', '9':
 				s.stringBuilder.WriteRune(char)
 				continue
+			case '.':
+				if s.isBuildingNumber() {
+					str := s.stringBuilder.String()
+
+					if strings.ContainsRune(str, char) {
+						s.reportToken(str)
+						s.stringBuilder.Reset()
+
+						lexeme = string(char)
+						break
+					}
+
+					s.stringBuilder.WriteRune(char)
+					continue
+				}
+
+				lexeme = string(char)
 			case '"':
 				s.stringBuilder.WriteRune(char)
 
@@ -107,19 +128,6 @@ func (s *Scanner) Scan() {
 		}
 
 		if s.isBuildingString() {
-			if lexeme, ok := toNumber(s.stringBuilder.String()); ok {
-				token, err := Tokenize(lexeme)
-
-				if err != nil {
-					s.reportError(err)
-					continue
-				}
-
-				fmt.Println(token)
-				s.stringBuilder.Reset()
-				continue
-			}
-
 			s.reportError(errors.New("Unterminated string."))
 		}
 	}
