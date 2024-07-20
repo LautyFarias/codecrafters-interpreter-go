@@ -48,6 +48,11 @@ func main() {
 				continue
 			}
 
+			if buildingString && char != '"' {
+				stringBuilder.WriteRune(char)
+				continue
+			}
+
 			switch char {
 			case '"':
 				stringBuilder.WriteRune(char)
@@ -71,7 +76,6 @@ func main() {
 					lexeme += string(next)
 					skipChar = true
 				}
-
 			case '/':
 				next, err := scanning.GetNextRune(line, index)
 
@@ -83,17 +87,8 @@ func main() {
 					break lineIteration
 				}
 			case scanning.BlankToken, scanning.TabToken:
-				if buildingString {
-					stringBuilder.WriteRune(char)
-				}
-
 				continue
 			default:
-				if buildingString {
-					stringBuilder.WriteRune(char)
-					continue
-				}
-
 				lexeme = string(char)
 			}
 
