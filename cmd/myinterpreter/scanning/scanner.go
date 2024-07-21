@@ -181,5 +181,5 @@ func (s *Scanner) reportError(err error) {
 }
 
 func (s *Scanner) Close() {
-	s.source.Close()
+	_ = s.source.Close()
 }
