@@ -16,7 +16,7 @@ type Scanner struct {
 	stringBuilder *strings.Builder
 	line          string
 	lineNumber    int
-	charIndex     int
+	chI           int
 	Error         bool
 }
 
@@ -29,7 +29,7 @@ func NewScanner(source *os.File) *Scanner {
 }
 
 func (s *Scanner) next() (rune, error) {
-	nextIndex := s.charIndex + 1
+	nextIndex := s.chI + 1
 
 	if nextIndex >= len(s.line) {
 		return ' ', errors.New("no next rune found")
@@ -57,7 +57,7 @@ func (s *Scanner) Scan() {
 		skipChar := false
 
 	lineIteration:
-		for s.charIndex, char = range s.line {
+		for s.chI, char = range s.line {
 			if skipChar {
 				skipChar = false
 				continue
