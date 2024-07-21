@@ -5,13 +5,6 @@ import (
 	"strings"
 )
 
-const EOF = "EOF"
-
-const (
-	TabToken   = '	'
-	BlankToken = ' '
-)
-
 type Token struct {
 	tokenType string
 	lexeme    string
@@ -21,6 +14,23 @@ type Token struct {
 func (t Token) String() string {
 	return t.tokenType + " " + t.lexeme + " " + t.literal
 }
+
+func Tokenize(lexeme string) (Token, error) {
+	tokenType, err := getType(lexeme)
+
+	if err != nil {
+		return Token{}, err
+	}
+
+	return Token{tokenType: tokenType, lexeme: getLexeme(lexeme), literal: getLiteral(lexeme)}, nil
+}
+
+const EOF = "EOF"
+
+const (
+	TabToken   = '	'
+	BlankToken = ' '
+)
 
 var typeByChar = map[string]string{
 	EOF: EOF,
@@ -90,14 +100,4 @@ func getLiteral(char string) string {
 	}
 
 	return "null"
-}
-
-func Tokenize(char string) (Token, error) {
-	tokenType, err := getType(char)
-
-	if err != nil {
-		return Token{}, err
-	}
-
-	return Token{tokenType: tokenType, lexeme: getLexeme(char), literal: getLiteral(char)}, nil
 }
