@@ -53,41 +53,41 @@ func (s *Scanner) Scan() {
 		s.line = s.scanner.Text()
 
 		var lexeme string
-		var char rune
+		var ch rune
 		skipChar := false
 
 	lineIteration:
-		for s.chI, char = range s.line {
+		for s.chI, ch = range s.line {
 			if skipChar {
 				skipChar = false
 				continue
 			}
 
-			if s.isBuildingString() && char != '"' {
-				s.stringBuilder.WriteRune(char)
+			if s.isBuildingString() && ch != '"' {
+				s.stringBuilder.WriteRune(ch)
 				continue
 			}
 
-			switch char {
+			switch ch {
 			case '0', '1', '2', '3', '4', '5', '6', '7', '8', '9':
-				s.stringBuilder.WriteRune(char)
+				s.stringBuilder.WriteRune(ch)
 				continue
 			case '.':
 				if s.isBuildingNumber() {
 					str := s.stringBuilder.String()
 
-					if strings.ContainsRune(str, char) {
+					if strings.ContainsRune(str, ch) {
 						s.reportToken(str)
 						s.stringBuilder.Reset()
 
-						lexeme = string(char)
+						lexeme = string(ch)
 						break
 					}
 
 					next, _ := s.next()
 
 					if unicode.IsNumber(next) {
-						s.stringBuilder.WriteRune(char)
+						s.stringBuilder.WriteRune(ch)
 						continue
 					}
 
@@ -95,9 +95,9 @@ func (s *Scanner) Scan() {
 					s.stringBuilder.Reset()
 				}
 
-				lexeme = string(char)
+				lexeme = string(ch)
 			case '"':
-				s.stringBuilder.WriteRune(char)
+				s.stringBuilder.WriteRune(ch)
 
 				if s.stringBuilder.Len() == 1 {
 					continue
@@ -110,7 +110,7 @@ func (s *Scanner) Scan() {
 			case '<', '>', '=', '!':
 				next, _ := s.next()
 
-				lexeme = string(char)
+				lexeme = string(ch)
 
 				if next == '=' {
 					lexeme += string(next)
@@ -120,7 +120,7 @@ func (s *Scanner) Scan() {
 				next, err := s.next()
 
 				if err != nil {
-					lexeme = string(char)
+					lexeme = string(ch)
 				}
 
 				if next == '/' {
@@ -129,7 +129,7 @@ func (s *Scanner) Scan() {
 			case BlankToken, TabToken:
 				continue
 			default:
-				lexeme = string(char)
+				lexeme = string(ch)
 			}
 
 			if s.isBuildingNumber() {
