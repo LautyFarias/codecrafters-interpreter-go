@@ -158,6 +158,9 @@ func (s *Scanner) Scan() {
 			s.reportError(errors.New("Unterminated string."))
 		}
 	}
+
+	s.reportToken(EOF)
+
 }
 
 func (s *Scanner) reportToken(lexeme string) {

@@ -40,9 +40,6 @@ func main() {
 
 	scanner.Scan()
 
-	token, _ := scanning.Tokenize(scanning.EOF)
-	fmt.Println(token)
-
 	if scanner.Error {
 		os.Exit(lexicalErrExitCode)
 	}
