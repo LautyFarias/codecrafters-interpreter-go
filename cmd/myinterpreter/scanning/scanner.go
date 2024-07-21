@@ -140,6 +140,11 @@ func (s *Scanner) Scan() {
 			s.reportToken(lexeme)
 		}
 
+		if s.isBuildingNumber() {
+			s.reportToken(s.stringBuilder.String())
+			s.stringBuilder.Reset()
+		}
+
 		if s.isBuildingString() {
 			s.reportError(errors.New("Unterminated string."))
 		}
