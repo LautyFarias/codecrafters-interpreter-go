@@ -10,25 +10,16 @@ import (
 )
 
 type Scanner struct {
-	source        *os.File
-	scanner       *bufio.Scanner
-	stringBuilder *strings.Builder
-	line          string
-	lineNumber    int
-	chI           int
-	Error         bool
+	source     *os.File
+	scanner    *bufio.Scanner
+	line       string
+	lineNumber int
+	chI        int
+	Error      bool
 }
 
 func NewScanner(source *os.File) *Scanner {
-	return &Scanner{
-		source:        source,
-		scanner:       bufio.NewScanner(source),
-		stringBuilder: &strings.Builder{},
-	}
-}
-
-func (s *Scanner) isBuildingNumber() bool {
-	return s.stringBuilder.Len() > 0 && s.stringBuilder.String()[0] != '"'
+	return &Scanner{source: source, scanner: bufio.NewScanner(source)}
 }
 
 func (s *Scanner) next() (rune, error) {
@@ -40,6 +31,41 @@ func (s *Scanner) next() (rune, error) {
 	s.chI++
 
 	return rune(n), nil
+}
+
+func (s *Scanner) scanNumber(initial rune) string {
+	b := strings.Builder{}
+	b.WriteRune(initial)
+
+	defer b.Reset()
+
+	for {
+		ch, err := s.next()
+
+		if err != nil {
+			return b.String()
+		}
+
+		if !unicode.IsNumber(ch) {
+			// ch is a letter or string builder already contains '.'
+			if ch != '.' || strings.ContainsRune(b.String(), ch) {
+				s.chI--
+				return b.String()
+			}
+
+			// at the moment, ch == '.'
+
+			ch, _ = s.next()
+			if !unicode.IsNumber(ch) {
+				s.chI--
+				return b.String()
+			}
+
+			b.WriteRune('.')
+		}
+
+		b.WriteRune(ch)
+	}
 }
 
 func (s *Scanner) scanString(initial rune) (string, error) {
@@ -76,32 +102,7 @@ lineIteration:
 
 		switch ch {
 		case '0', '1', '2', '3', '4', '5', '6', '7', '8', '9':
-			s.stringBuilder.WriteRune(ch)
-			continue
-		case '.':
-			if s.isBuildingNumber() {
-				str := s.stringBuilder.String()
-
-				if strings.ContainsRune(str, ch) {
-					s.reportToken(str)
-					s.stringBuilder.Reset()
-
-					lexeme = string(ch)
-					break
-				}
-
-				next, err := s.next()
-
-				if err == nil && unicode.IsNumber(next) {
-					s.stringBuilder.WriteRune(ch)
-					continue
-				}
-
-				s.reportToken(s.stringBuilder.String())
-				s.stringBuilder.Reset()
-			}
-
-			lexeme = string(ch)
+			lexeme = s.scanNumber(ch)
 		case '"':
 			lexeme, err = s.scanString(ch)
 
@@ -140,11 +141,6 @@ lineIteration:
 			lexeme = string(ch)
 		}
 
-		if s.isBuildingNumber() {
-			s.reportToken(s.stringBuilder.String())
-			s.stringBuilder.Reset()
-		}
-
 		s.reportToken(lexeme)
 	}
 }
@@ -156,11 +152,6 @@ func (s *Scanner) Scan() {
 
 		s.scanLine()
 		s.chI = 0
-
-		if s.isBuildingNumber() {
-			s.reportToken(s.stringBuilder.String())
-			s.stringBuilder.Reset()
-		}
 	}
 
 	s.reportToken(EOF)
