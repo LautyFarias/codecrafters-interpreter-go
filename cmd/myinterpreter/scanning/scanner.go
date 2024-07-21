@@ -132,12 +132,12 @@ func (s *Scanner) Scan() {
 				lexeme = string(char)
 			}
 
-			s.reportToken(lexeme)
-		}
+			if s.isBuildingNumber() {
+				s.reportToken(s.stringBuilder.String())
+				s.stringBuilder.Reset()
+			}
 
-		if s.isBuildingNumber() {
-			s.reportToken(s.stringBuilder.String())
-			s.stringBuilder.Reset()
+			s.reportToken(lexeme)
 		}
 
 		if s.isBuildingString() {
