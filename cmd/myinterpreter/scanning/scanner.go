@@ -27,10 +27,6 @@ func NewScanner(source *os.File) *Scanner {
 	}
 }
 
-func (s *Scanner) isBuildingString() bool {
-	return s.stringBuilder.Len() > 0 && s.stringBuilder.String()[0] == '"'
-}
-
 func (s *Scanner) isBuildingNumber() bool {
 	return s.stringBuilder.Len() > 0 && s.stringBuilder.String()[0] != '"'
 }
@@ -46,6 +42,27 @@ func (s *Scanner) next() (rune, error) {
 	return rune(n), nil
 }
 
+func (s *Scanner) scanString(initial rune) (string, error) {
+	b := strings.Builder{}
+	b.WriteRune(initial)
+
+	defer b.Reset()
+
+	for {
+		ch, err := s.next()
+
+		if err != nil {
+			return "", errors.New("Unterminated string.")
+		}
+
+		b.WriteRune(ch)
+
+		if ch == initial {
+			return b.String(), nil
+		}
+	}
+}
+
 func (s *Scanner) scanLine() {
 	var lexeme string
 
@@ -55,11 +72,6 @@ lineIteration:
 
 		if err != nil {
 			break
-		}
-
-		if s.isBuildingString() && ch != '"' {
-			s.stringBuilder.WriteRune(ch)
-			continue
 		}
 
 		switch ch {
@@ -91,15 +103,11 @@ lineIteration:
 
 			lexeme = string(ch)
 		case '"':
-			s.stringBuilder.WriteRune(ch)
+			lexeme, err = s.scanString(ch)
 
-			if s.stringBuilder.Len() == 1 {
+			if err != nil {
+				s.reportError(err)
 				continue
-			}
-
-			if s.isBuildingString() {
-				lexeme = s.stringBuilder.String()
-				s.stringBuilder.Reset()
 			}
 		case '<', '>', '=', '!':
 			next, _ := s.next()
@@ -153,14 +161,9 @@ func (s *Scanner) Scan() {
 			s.reportToken(s.stringBuilder.String())
 			s.stringBuilder.Reset()
 		}
-
-		if s.isBuildingString() {
-			s.reportError(errors.New("Unterminated string."))
-		}
 	}
 
 	s.reportToken(EOF)
-
 }
 
 func (s *Scanner) reportToken(lexeme string) {
