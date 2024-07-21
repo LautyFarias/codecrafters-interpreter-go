@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"errors"
 	"fmt"
-	"github.com/codecrafters-io/interpreter-starter-go/cmd/myinterpreter/reporter"
 	"os"
 	"strings"
 	"unicode"
@@ -173,7 +172,8 @@ func (s *Scanner) reportToken(lexeme string) {
 }
 
 func (s *Scanner) reportError(err error) {
-	reporter.PrintErrorAtLine(err, s.lineNumber)
+	_, _ = fmt.Fprintf(os.Stderr, "[line %v] Error: %v\n", s.line, err)
+
 	s.Error = true
 }
 
