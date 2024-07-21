@@ -83,6 +83,9 @@ func getLiteral(char string) string {
 	}
 
 	if isNumeric(char) {
+		if !strings.ContainsRune(char, '.') {
+			char += ".0"
+		}
 		return char
 	}
 

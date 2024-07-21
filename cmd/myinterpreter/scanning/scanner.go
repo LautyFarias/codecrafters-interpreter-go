@@ -7,6 +7,7 @@ import (
 	"github.com/codecrafters-io/interpreter-starter-go/cmd/myinterpreter/reporter"
 	"os"
 	"strings"
+	"unicode"
 )
 
 type Scanner struct {
@@ -83,8 +84,15 @@ func (s *Scanner) Scan() {
 						break
 					}
 
-					s.stringBuilder.WriteRune(char)
-					continue
+					next, _ := s.next()
+
+					if unicode.IsNumber(next) {
+						s.stringBuilder.WriteRune(char)
+						continue
+					}
+
+					s.reportToken(s.stringBuilder.String())
+					s.stringBuilder.Reset()
 				}
 
 				lexeme = string(char)
