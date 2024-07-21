@@ -6,11 +6,14 @@ import (
 	"os"
 )
 
-const lexicalErrExitCode = 65
+const (
+	errExitCode        = 1
+	lexicalErrExitCode = 65
+)
 
 func printErrorAndExit(err string, args ...any) {
 	_, _ = fmt.Fprintf(os.Stderr, err, args...)
-	os.Exit(1)
+	os.Exit(errExitCode)
 }
 
 func checkArguments(args []string) {
