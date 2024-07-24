@@ -154,7 +154,7 @@ func (s *Scanner) Scan() {
 		s.chI = 0
 	}
 
-	s.reportToken(EOF)
+	s.reportToken(EOF.String())
 }
 
 func (s *Scanner) reportToken(lexeme string) {
