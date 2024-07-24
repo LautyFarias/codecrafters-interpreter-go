@@ -50,6 +50,8 @@ var typeNameByTokenType = [...]string{
 	SLASH:        "SLASH",
 	PLUS:         "PLUS",
 	MINUS:        "MINUS",
+	STRING:       "STRING",
+	NUMBER:       "NUMBER",
 }
 
 func (tt TokenType) String() string {
