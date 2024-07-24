@@ -192,6 +192,7 @@ var keywords = []string{
 	"foo",
 	"bar",
 	"_hello",
+	"baz",
 }
 
 func IsKeyword(lexeme string) bool {
