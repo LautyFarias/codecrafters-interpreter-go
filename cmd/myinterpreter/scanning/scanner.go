@@ -89,6 +89,11 @@ func (s *Scanner) scanString(initial rune) (string, error) {
 	}
 }
 
+const (
+	tab        = '	'
+	whitespace = ' '
+)
+
 func (s *Scanner) scanLine() {
 	var lexeme string
 
@@ -135,7 +140,7 @@ lineIteration:
 
 			lexeme = string(ch)
 			s.chI--
-		case BlankToken, TabToken:
+		case whitespace, tab:
 			continue
 		default:
 			lexeme = string(ch)

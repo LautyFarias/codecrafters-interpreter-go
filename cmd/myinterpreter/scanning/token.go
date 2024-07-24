@@ -7,11 +7,6 @@ import (
 	"strings"
 )
 
-const (
-	TabToken   = '	'
-	BlankToken = ' '
-)
-
 type Token struct {
 	tokenType TokenType
 	lexeme    string
