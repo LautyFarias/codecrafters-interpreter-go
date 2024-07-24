@@ -157,7 +157,7 @@ func getType(lexeme string) (tt TokenType, err error) {
 
 func getLexeme(lexeme string) string {
 	if lexeme == EOF.String() {
-		return " "
+		return ""
 	}
 
 	return lexeme
