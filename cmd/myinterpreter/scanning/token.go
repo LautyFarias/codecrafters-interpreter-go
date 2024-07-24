@@ -3,9 +3,9 @@ package scanning
 import (
 	"errors"
 	"fmt"
-	"slices"
 	"strconv"
 	"strings"
+	"unicode"
 )
 
 type Token struct {
@@ -154,7 +154,7 @@ func getType(lexeme string) (tt TokenType, err error) {
 			break
 		}
 
-		if IsKeyword(lexeme) {
+		if IsIdentifier(lexeme) {
 			tt = IDENTIFIER
 			break
 		}
@@ -188,13 +188,8 @@ func getLiteral(lexeme string, tt TokenType) string {
 	}
 }
 
-var keywords = []string{
-	"foo",
-	"bar",
-	"_hello",
-	"baz",
-}
-
-func IsKeyword(lexeme string) bool {
-	return slices.Contains(keywords, lexeme)
+func IsIdentifier(lexeme string) bool {
+	return !strings.ContainsFunc(lexeme, func(r rune) bool {
+		return !unicode.IsLetter(r) && r != '_'
+	})
 }

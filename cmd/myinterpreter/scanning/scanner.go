@@ -165,12 +165,12 @@ lineIteration:
 		case whitespace, tab:
 			continue
 		default:
-			lexeme = s.scanWord(ch)
-
-			if !IsKeyword(lexeme) {
-				lexeme = string(ch)
+			if unicode.IsLetter(ch) || ch == '_' {
+				lexeme = s.scanWord(ch)
+				break
 			}
 
+			lexeme = string(ch)
 		}
 
 		s.reportToken(lexeme)
