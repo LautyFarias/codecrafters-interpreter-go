@@ -190,6 +190,6 @@ func getLiteral(lexeme string, tt TokenType) string {
 
 func IsIdentifier(lexeme string) bool {
 	return !strings.ContainsFunc(lexeme, func(r rune) bool {
-		return !unicode.IsLetter(r) && r != '_'
+		return unicode.IsSymbol(r)
 	})
 }
