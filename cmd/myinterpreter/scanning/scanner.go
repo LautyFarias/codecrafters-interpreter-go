@@ -102,7 +102,7 @@ func (s *Scanner) scanWord(initial rune) string {
 			return b.String()
 		}
 
-		if ch == whitespace {
+		if !(unicode.IsLetter(ch) || unicode.IsDigit(ch) || ch == '_') {
 			s.chI--
 			return b.String()
 		}
