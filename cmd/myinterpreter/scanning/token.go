@@ -141,18 +141,18 @@ func getType(lexeme string) (tt TokenType, err error) {
 	default:
 		if len(lexeme) > 1 && lexeme[0] == '"' && lexeme[len(lexeme)-1] == '"' {
 			tt = STRING
-			return
+			break
 		}
 
 		if _, err := strconv.ParseFloat(lexeme, 64); err == nil {
 			tt = NUMBER
-			return
+			break
 		}
 
 		err = errors.New(fmt.Sprintf("Unexpected character: %s", lexeme))
 	}
 
-	return
+	return tt, err
 }
 
 func getLexeme(lexeme string) string {

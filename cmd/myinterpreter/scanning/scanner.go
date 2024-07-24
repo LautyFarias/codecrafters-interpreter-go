@@ -174,7 +174,7 @@ func (s *Scanner) reportToken(lexeme string) {
 }
 
 func (s *Scanner) reportError(err error) {
-	_, _ = fmt.Fprintf(os.Stderr, "[line %v] Error: %v\n", s.line, err)
+	_, _ = fmt.Fprintf(os.Stderr, "[line %v] Error: %v\n", s.lineNumber, err)
 
 	s.Error = true
 }
