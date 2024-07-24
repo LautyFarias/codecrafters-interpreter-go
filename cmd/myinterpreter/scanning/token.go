@@ -182,6 +182,10 @@ func getLiteral(lexeme string, tt TokenType) string {
 			lexeme = fmt.Sprintf("%s.0", lexeme)
 		}
 
+		if strings.HasSuffix(lexeme, ".00") {
+			lexeme = strings.TrimSuffix(lexeme, "0")
+		}
+
 		return lexeme
 	default:
 		return "null"
