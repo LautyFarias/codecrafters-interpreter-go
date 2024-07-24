@@ -3,6 +3,7 @@ package scanning
 import (
 	"errors"
 	"fmt"
+	"slices"
 	"strconv"
 	"strings"
 )
@@ -28,35 +29,6 @@ func Tokenize(lexeme string) (Token, error) {
 }
 
 type TokenType int
-
-var typeNameByTokenType = [...]string{
-	EOF:          "EOF",
-	LeftParen:    "LEFT_PAREN",
-	RightParen:   "RIGHT_PAREN",
-	LeftBrace:    "LEFT_BRACE",
-	RightBrace:   "RIGHT_BRACE",
-	DOT:          "DOT",
-	COMMA:        "COMMA",
-	SEMICOLON:    "SEMICOLON",
-	LESS:         "LESS",
-	LessEqual:    "LESS_EQUAL",
-	GREATER:      "GREATER",
-	GreaterEqual: "GREATER_EQUAL",
-	BANG:         "BANG",
-	BangEqual:    "BANG_EQUAL",
-	EQUAL:        "EQUAL",
-	EqualEqual:   "EQUAL_EQUAL",
-	STAR:         "STAR",
-	SLASH:        "SLASH",
-	PLUS:         "PLUS",
-	MINUS:        "MINUS",
-	STRING:       "STRING",
-	NUMBER:       "NUMBER",
-}
-
-func (tt TokenType) String() string {
-	return typeNameByTokenType[tt]
-}
 
 const (
 	EOF TokenType = iota
@@ -96,7 +68,38 @@ const (
 
 	STRING
 	NUMBER
+	IDENTIFIER
 )
+
+var typeNameByTokenType = [...]string{
+	EOF:          "EOF",
+	LeftParen:    "LEFT_PAREN",
+	RightParen:   "RIGHT_PAREN",
+	LeftBrace:    "LEFT_BRACE",
+	RightBrace:   "RIGHT_BRACE",
+	DOT:          "DOT",
+	COMMA:        "COMMA",
+	SEMICOLON:    "SEMICOLON",
+	LESS:         "LESS",
+	LessEqual:    "LESS_EQUAL",
+	GREATER:      "GREATER",
+	GreaterEqual: "GREATER_EQUAL",
+	BANG:         "BANG",
+	BangEqual:    "BANG_EQUAL",
+	EQUAL:        "EQUAL",
+	EqualEqual:   "EQUAL_EQUAL",
+	STAR:         "STAR",
+	SLASH:        "SLASH",
+	PLUS:         "PLUS",
+	MINUS:        "MINUS",
+	STRING:       "STRING",
+	NUMBER:       "NUMBER",
+	IDENTIFIER:   "IDENTIFIER",
+}
+
+func (tt TokenType) String() string {
+	return typeNameByTokenType[tt]
+}
 
 func getType(lexeme string) (tt TokenType, err error) {
 	switch lexeme {
@@ -151,6 +154,11 @@ func getType(lexeme string) (tt TokenType, err error) {
 			break
 		}
 
+		if IsKeyword(lexeme) {
+			tt = IDENTIFIER
+			break
+		}
+
 		err = errors.New(fmt.Sprintf("Unexpected character: %s", lexeme))
 	}
 
@@ -178,4 +186,14 @@ func getLiteral(lexeme string, tt TokenType) string {
 	default:
 		return "null"
 	}
+}
+
+var keywords = []string{
+	"foo",
+	"bar",
+	"_hello",
+}
+
+func IsKeyword(lexeme string) bool {
+	return slices.Contains(keywords, lexeme)
 }

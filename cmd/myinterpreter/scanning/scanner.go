@@ -89,6 +89,28 @@ func (s *Scanner) scanString(initial rune) (string, error) {
 	}
 }
 
+func (s *Scanner) scanWord(initial rune) string {
+	b := strings.Builder{}
+	b.WriteRune(initial)
+
+	defer b.Reset()
+
+	for {
+		ch, err := s.next()
+
+		if err != nil {
+			return b.String()
+		}
+
+		if ch == whitespace {
+			s.chI--
+			return b.String()
+		}
+
+		b.WriteRune(ch)
+	}
+}
+
 const (
 	tab        = '	'
 	whitespace = ' '
@@ -143,7 +165,12 @@ lineIteration:
 		case whitespace, tab:
 			continue
 		default:
-			lexeme = string(ch)
+			lexeme = s.scanWord(ch)
+
+			if !IsKeyword(lexeme) {
+				lexeme = string(ch)
+			}
+
 		}
 
 		s.reportToken(lexeme)
