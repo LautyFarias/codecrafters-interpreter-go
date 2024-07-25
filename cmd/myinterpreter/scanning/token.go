@@ -69,6 +69,25 @@ const (
 	STRING
 	NUMBER
 	IDENTIFIER
+
+	// KEYWORDS
+
+	AND
+	CLASS
+	ELSE
+	FALSE
+	FOR
+	FUN
+	IF
+	NIL
+	OR
+	PRINT
+	RETURN
+	SUPER
+	THIS
+	TRUE
+	VAR
+	WHILE
 )
 
 var typeNameByTokenType = [...]string{
@@ -95,6 +114,22 @@ var typeNameByTokenType = [...]string{
 	STRING:       "STRING",
 	NUMBER:       "NUMBER",
 	IDENTIFIER:   "IDENTIFIER",
+	AND:          "AND",
+	CLASS:        "CLASS",
+	ELSE:         "ELSE",
+	FALSE:        "FALSE",
+	FOR:          "FOR",
+	FUN:          "FUN",
+	IF:           "IF",
+	NIL:          "NIL",
+	OR:           "OR",
+	PRINT:        "PRINT",
+	RETURN:       "RETURN",
+	SUPER:        "SUPER",
+	THIS:         "THIS",
+	TRUE:         "TRUE",
+	VAR:          "VAR",
+	WHILE:        "WHILE",
 }
 
 func (tt TokenType) String() string {
@@ -143,6 +178,38 @@ func getType(lexeme string) (tt TokenType, err error) {
 		tt = PLUS
 	case "-":
 		tt = MINUS
+	case "and":
+		tt = AND
+	case "class":
+		tt = CLASS
+	case "else":
+		tt = ELSE
+	case "false":
+		tt = FALSE
+	case "for":
+		tt = FOR
+	case "fun":
+		tt = FUN
+	case "if":
+		tt = IF
+	case "nil":
+		tt = NIL
+	case "or":
+		tt = OR
+	case "print":
+		tt = PRINT
+	case "return":
+		tt = RETURN
+	case "super":
+		tt = SUPER
+	case "this":
+		tt = THIS
+	case "true":
+		tt = TRUE
+	case "var":
+		tt = VAR
+	case "while":
+		tt = WHILE
 	default:
 		if len(lexeme) > 1 && lexeme[0] == '"' && lexeme[len(lexeme)-1] == '"' {
 			tt = STRING
