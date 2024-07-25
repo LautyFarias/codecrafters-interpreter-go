@@ -209,7 +209,3 @@ func (s *Scanner) reportError(err error) {
 
 	s.Error = true
 }
-
-func (s *Scanner) Close() {
-	_ = s.source.Close()
-}

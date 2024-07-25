@@ -16,34 +16,39 @@ func printErrorAndExit(err string, args ...any) {
 	os.Exit(errExitCode)
 }
 
-func checkArguments(args []string) {
-	if len(args) < 3 {
-		printErrorAndExit("Usage: ./your_program.sh tokenize <filename>")
-	}
-
-	command := args[1]
-
-	if command != "tokenize" {
-		printErrorAndExit("Unknown command: %s\n", command)
-	}
-}
-
-func main() {
-	checkArguments(os.Args)
-
-	filename := os.Args[2]
-	file, err := os.Open(filename)
+func openFile(path string) *os.File {
+	file, err := os.Open(path)
 
 	if err != nil {
 		printErrorAndExit("Error opening file: %v\n", err)
 	}
 
-	scanner := scanning.NewScanner(file)
-	defer scanner.Close()
+	return file
+}
 
-	scanner.Scan()
-
-	if scanner.Error {
-		os.Exit(lexicalErrExitCode)
+func main() {
+	if len(os.Args) < 3 {
+		printErrorAndExit("Usage: ./your_program.sh <command> <filename>")
 	}
+
+	command := os.Args[1]
+	filename := os.Args[2]
+
+	switch command {
+	case "tokenize":
+		file := openFile(filename)
+		defer file.Close()
+
+		scanner := scanning.NewScanner(file)
+		scanner.Scan()
+
+		if scanner.Error {
+			os.Exit(lexicalErrExitCode)
+		}
+	case "parse":
+		printErrorAndExit("Not implemented parse yet")
+	default:
+		printErrorAndExit("Unknown command: %s\n", command)
+	}
+
 }
