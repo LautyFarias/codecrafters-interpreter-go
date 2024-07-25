@@ -138,9 +138,13 @@ lineIteration:
 				continue
 			}
 		case '<', '>', '=', '!':
-			next, _ := s.next()
+			next, err := s.next()
 
 			lexeme = string(ch)
+
+			if err != nil {
+				break
+			}
 
 			if next != '=' {
 				s.chI--
