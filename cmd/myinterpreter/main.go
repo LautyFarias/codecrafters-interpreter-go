@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/codecrafters-io/interpreter-starter-go/cmd/myinterpreter/parsing"
 	"github.com/codecrafters-io/interpreter-starter-go/cmd/myinterpreter/scanning"
 	"os"
 )
@@ -46,7 +47,11 @@ func main() {
 			os.Exit(lexicalErrExitCode)
 		}
 	case "parse":
-		printErrorAndExit("Not implemented parse yet")
+		file := openFile(filename)
+		defer file.Close()
+
+		scanner := parsing.NewScanner(file)
+		scanner.Scan()
 	default:
 		printErrorAndExit("Unknown command: %s\n", command)
 	}
