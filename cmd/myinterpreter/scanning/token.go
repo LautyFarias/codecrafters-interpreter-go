@@ -176,7 +176,7 @@ func getType(lexeme string) (tt TokenType, err error) {
 			break
 		}
 
-		if IsIdentifier(lexeme) {
+		if isIdentifier(lexeme) {
 			tt = IDENTIFIER
 			break
 		}
@@ -214,7 +214,7 @@ func getLiteral(lexeme string, tt TokenType) string {
 	}
 }
 
-func IsIdentifier(lexeme string) bool {
+func isIdentifier(lexeme string) bool {
 	return strings.ContainsFunc(lexeme, func(r rune) bool {
 		return unicode.IsLetter(r) || unicode.IsDigit(r) || unicode.IsSpace(r) || r == '_'
 	})
