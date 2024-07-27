@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math"
 	"strconv"
+	"strings"
 )
 
 type Expr interface {
@@ -15,9 +16,9 @@ type Literal struct {
 }
 
 func (l *Literal) String() string {
-	str := fmt.Sprintf("%v", l.Value)
+	literal := fmt.Sprintf("%v", l.Value)
 
-	num, err := strconv.ParseFloat(str, 64)
+	num, err := strconv.ParseFloat(literal, 64)
 	if err == nil {
 		if num == math.Trunc(num) {
 			return fmt.Sprintf("%.1f", num)
@@ -25,7 +26,9 @@ func (l *Literal) String() string {
 		return fmt.Sprintf("%.2f", num)
 	}
 
-	return str
+	literal = strings.ReplaceAll(literal, "\"", "")
+
+	return literal
 }
 
 func (l *Literal) Accept(v Visitor) {
