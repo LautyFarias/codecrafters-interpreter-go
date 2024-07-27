@@ -28,6 +28,7 @@ func Tokenize(lexeme string) (Token, error) {
 	return Token{tokenType: tt, lexeme: getLexeme(lexeme), literal: getLiteral(lexeme, tt)}, nil
 }
 
+//go:generate stringer -type=TokenType
 type TokenType int
 
 const (
@@ -35,10 +36,10 @@ const (
 
 	// CODE BLOCKS
 
-	LeftParen
-	RightParen
-	LeftBrace
-	RightBrace
+	LEFT_PAREN
+	RIGHT_PAREN
+	LEFT_BRACE
+	RIGHT_BRACE
 
 	// OTHER
 
@@ -49,12 +50,12 @@ const (
 	// COMPARISON
 
 	LESS
-	LessEqual
+	LESS_EQUAL
 	GREATER
-	GreaterEqual
+	GREATER_EQUAL
 	BANG
-	BangEqual
-	EqualEqual
+	BANG_EQUAL
+	EQUAL_EQUAL
 
 	// MATH
 
@@ -90,64 +91,18 @@ const (
 	WHILE
 )
 
-var typeNameByTokenType = [...]string{
-	EOF:          "EOF",
-	LeftParen:    "LEFT_PAREN",
-	RightParen:   "RIGHT_PAREN",
-	LeftBrace:    "LEFT_BRACE",
-	RightBrace:   "RIGHT_BRACE",
-	DOT:          "DOT",
-	COMMA:        "COMMA",
-	SEMICOLON:    "SEMICOLON",
-	LESS:         "LESS",
-	LessEqual:    "LESS_EQUAL",
-	GREATER:      "GREATER",
-	GreaterEqual: "GREATER_EQUAL",
-	BANG:         "BANG",
-	BangEqual:    "BANG_EQUAL",
-	EQUAL:        "EQUAL",
-	EqualEqual:   "EQUAL_EQUAL",
-	STAR:         "STAR",
-	SLASH:        "SLASH",
-	PLUS:         "PLUS",
-	MINUS:        "MINUS",
-	STRING:       "STRING",
-	NUMBER:       "NUMBER",
-	IDENTIFIER:   "IDENTIFIER",
-	AND:          "AND",
-	CLASS:        "CLASS",
-	ELSE:         "ELSE",
-	FALSE:        "FALSE",
-	FOR:          "FOR",
-	FUN:          "FUN",
-	IF:           "IF",
-	NIL:          "NIL",
-	OR:           "OR",
-	PRINT:        "PRINT",
-	RETURN:       "RETURN",
-	SUPER:        "SUPER",
-	THIS:         "THIS",
-	TRUE:         "TRUE",
-	VAR:          "VAR",
-	WHILE:        "WHILE",
-}
-
-func (tt TokenType) String() string {
-	return typeNameByTokenType[tt]
-}
-
 func getType(lexeme string) (tt TokenType, err error) {
 	switch lexeme {
 	case "EOF":
 		tt = EOF
 	case "(":
-		tt = LeftParen
+		tt = LEFT_PAREN
 	case ")":
-		tt = RightParen
+		tt = RIGHT_PAREN
 	case "{":
-		tt = LeftBrace
+		tt = LEFT_BRACE
 	case "}":
-		tt = RightBrace
+		tt = RIGHT_BRACE
 	case ".":
 		tt = DOT
 	case ",":
@@ -157,17 +112,17 @@ func getType(lexeme string) (tt TokenType, err error) {
 	case "<":
 		tt = LESS
 	case "<=":
-		tt = LessEqual
+		tt = LESS_EQUAL
 	case ">":
 		tt = GREATER
 	case ">=":
-		tt = GreaterEqual
+		tt = GREATER_EQUAL
 	case "!":
 		tt = BANG
 	case "!=":
-		tt = BangEqual
+		tt = BANG_EQUAL
 	case "==":
-		tt = EqualEqual
+		tt = EQUAL_EQUAL
 	case "=":
 		tt = EQUAL
 	case "*":
