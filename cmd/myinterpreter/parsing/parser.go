@@ -2,15 +2,14 @@ package parsing
 
 import (
 	"bufio"
-	"fmt"
+	"github.com/codecrafters-io/interpreter-starter-go/cmd/myinterpreter/parsing/ast"
 	"os"
 )
 
 type Scanner struct {
 	source  *os.File
 	scanner *bufio.Scanner
-	lno     int
-	l       string
+	line    string
 }
 
 func NewScanner(source *os.File) *Scanner {
@@ -19,9 +18,9 @@ func NewScanner(source *os.File) *Scanner {
 
 func (s *Scanner) Scan() {
 	for s.scanner.Scan() {
-		s.lno++
-		s.l = s.scanner.Text()
+		s.line = s.scanner.Text()
 
-		fmt.Println(s.l)
+		expr := ast.Literal{Value: s.line}
+		expr.Accept(&ast.PrinterVisitor{})
 	}
 }
